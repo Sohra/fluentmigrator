@@ -89,15 +89,15 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '$(Build.ArtifactStagingDirectory)/publish/FluentMigrator.Console.nuspec'
-    versioningScheme: 'byPrereleaseNumber'
-    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration)'
+    versioningScheme: 'off'
+    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration) Version=$(build.buildNumber)'
 
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
     packagesToPack: '$(Build.ArtifactStagingDirectory)/publish/FluentMigrator.Tools.nuspec'
-    versioningScheme: 'byPrereleaseNumber'
-    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration)'
+    versioningScheme: 'off'
+    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration) Version=$(build.buildNumber)'
 
 - task: PublishBuildArtifacts@1
   inputs:
