@@ -19,6 +19,7 @@ variables:
   solution: '**/FluentMigrator.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  versionEnvVar: ''
 
 steps:
 - task: NuGetToolInstaller@1
@@ -31,6 +32,10 @@ steps:
     updateAssemblyInfo: false
   env:
       BUILD_BUILDNUMBER: $(GitVersion.NuGetVersionV2)
+
+- script: |
+    echo '##vso[task.setvariable variable=versionEnvVar]$(build.buildNumber)'
+  displayName: Set environment variable for NuGetCommandV2
 
 - task: NuGetCommand@2
   inputs:
@@ -89,15 +94,15 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '$(Build.ArtifactStagingDirectory)/publish/FluentMigrator.Console.nuspec'
-    versioningScheme: 'off'
-    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration) Version=$(build.buildNumber)'
+    versioningScheme: 'byEnvVar'
+    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration)'
 
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
     packagesToPack: '$(Build.ArtifactStagingDirectory)/publish/FluentMigrator.Tools.nuspec'
-    versioningScheme: 'off'
-    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration) Version=$(build.buildNumber)'
+    versioningScheme: 'byEnvVar'
+    buildProperties: '-OutputDirectory "$(Build.ArtifactStagingDirectory)/output" -Properties Configuration=$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
   inputs:
